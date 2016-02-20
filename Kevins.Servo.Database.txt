@@ -1,0 +1,51 @@
+---------------------------------------------------------------------------------
+Note: Everything specified below is in Microseconds
+
+Servo Range below is TESTED usable range (in which Servo doesnt hit its limit)
+
+Comparison: http://www.servodatabase.com/compare?servos=896,917,1672
+--------------------------------------------------------------------------------
+-------------------------------------
+Brand: Hitec HS-7955TG | Digital
+
+Servo Range: 800 - 2200
+
+Center: 1500
+
+Total Usable Resolution: 1400
+
+http://www.servodatabase.com/servo/hitec/hs-7955tg
+--------------------------------------
+
+Brand: Hitec HS-645MG | Analog
+
+Servo Range: 500 - 2400
+
+Center: 1500
+
+Total Usable Resolution: 1900
+
+http://www.servodatabase.com/servo/hitec/hs-645mg
+---------------------------------------
+
+Brand: Traxxis 2056 | Analog
+
+Servo Range: 1110 - 1900
+
+Center: 1500
+
+Total Usable Resolution: 0790
+
+http://www.servodatabase.com/servo/traxxas/2056
+--------------------------------------
+
+Brand: Traxxis 2075 | Digital
+
+Servo Range: 500 - 2500
+
+Center: 1500
+
+Total Usable Resolution: 2000
+
+http://www.servodatabase.com/servo/traxxas/2075
+--------------------------------------
