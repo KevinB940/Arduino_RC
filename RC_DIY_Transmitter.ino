@@ -35,7 +35,7 @@ USB Usb;
 PS3BT srw1(&Usb);
 
 static const uint8_t signalPin = 13; // Set PPM signal output pin
-static int8_t trim; // Used to trim the steering wheel
+//static int8_t trim; // Used to trim the steering wheel
 static volatile uint16_t ppm[N_CHANNELS]; // This array holds the servo values for the PPM signal
 static uint8_t counterToUsScaleFactor; // Used to convert us values into values used for the counter
 
