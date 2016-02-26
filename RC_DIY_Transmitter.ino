@@ -51,11 +51,14 @@ static volatile uint8_t pinBitMask, *pinOutPort;
 
 
 void setup() {
+  initPPM();
+  
   Serial.begin(57600);
   if (Usb.Init() == -1) {
     Serial.println(F("\r\nOSC did not start"));
     while (1); // Halt
   }
+  
   uint8_t magicValue;
   EEPROM.get(0, magicValue);
   if (magicValue = MAGIC_VALUE)
@@ -71,15 +74,64 @@ void setup() {
   timer = millis();
 }
 
-void sendCommand(uint16_t steering, uint16_t forwardBackward) {
-  Serial.write('C'); // Send header
-  Serial.print(steering);
+
+
+
+void initPPM(void) {
+  for (uint8_t i = 0; i < N_CHANNELS; i++)
+    ppm[i] = SERVO_MID; // Initiallize default PPM values
+
+  pinMode(signalPin, OUTPUT);
+  pinBitMask = digitalPinToBitMask(signalPin);
+  pinOutPort = portOutputRegister(digitalPinToPort(signalPin));
+  *pinOutPort &= ~pinBitMask; // Set the PPM signal pin to the default state (off)
+
+  // Please read: http://maxembedded.com/2011/07/avr-timers-ctc-mode
+  cli(); // Disable interrupts
+  TCCR1A = 0; // Set entire TCCR1A register to 0
+  TCCR1B = (1 << WGM12) | (1 << CS11); // Turn on Clear Timer on Compare (CTC) mode with a prescaler equal to 8: 0.5 us at 16 MHz, 1 us at 8 MHz etc
+  counterToUsScaleFactor = (F_CPU / 8) / 1e6; // Used to convert us values into counter units
+  OCR1A = 0; // Timer compare value - will be set in the ISR routine
+  TIMSK1 |= (1 << OCIE1A); // Enable timer compare interrupt
+  sei(); // Enable interrupts
+}
+
+void updatePPM(uint16_t throttle, uint16_t steering) {
+  steering = constrain(steering + trim * (SERVO_MAX - SERVO_MIN) / 180, SERVO_MIN, SERVO_MAX); // Apply trim value
+#if 1
+  ppm[0] = throttle;
+  ppm[1] = steering;
+#else
+  Serial.print(throttle);
   Serial.write(',');
-  Serial.print(forwardBackward);
-  Serial.write(',');
-  Serial.print((uint16_t)(steering ^ forwardBackward)); // Send a simple checksum
-  Serial.write(';');
-  Serial.flush(); // Wait until data is sent
+  Serial.println(steering);
+#endif
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//void sendCommand(uint16_t steering, uint16_t forwardBackward) {
+  //Serial.write('C'); // Send header
+  //Serial.print(steering);
+  //Serial.write(',');
+  //Serial.print(forwardBackward);
+  //Serial.write(',');
+  //Serial.print((uint16_t)(steering ^ forwardBackward)); // Send a simple checksum
+  //Serial.write(';');
+  //Serial.flush(); // Wait until data is sent
   /*Serial.print(steering);
     Serial.write('\t');
     Serial.println(forwardBackward);*/
